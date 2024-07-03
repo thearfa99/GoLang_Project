@@ -1,2 +1,2 @@
-# GoLang_Project
- Simple Frontend and Microservice using Go
+# Simple Shopping List
+ Simple Frontend and Microservice using GoLang
