@@ -1,0 +1,166 @@
+<!-- index.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shopping List</title>
+    <style>
+        /* General Styles */
+body {
+    font-family: 'Arial', sans-serif;
+    background-color: #f4f4f4;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+}
+
+h1, h2 {
+    color: #333;
+}
+
+h1 {
+    font-size: 2.5rem;
+    margin-bottom: 1rem;
+}
+
+h2 {
+    font-size: 2rem;
+    margin-bottom: 1.5rem;
+}
+
+/* Task List Container */
+#taskList {
+    width: 80%;
+    max-width: 600px;
+    background-color: #fff;
+    border-radius: 5px;
+    padding: 1rem;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* Task Input Field */
+#taskInput {
+    width: 80%;
+    max-width: 600px;
+    padding: 0.5rem;
+    margin-bottom: 1rem;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    font-size: 1rem;
+}
+
+/* Add Item Button */
+button {
+    padding: 0.5rem 1rem;
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+button:hover {
+    background-color: #0056b3;
+}
+
+/* Task Item Styles */
+.task-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.5rem 0;
+    border-bottom: 1px solid #ddd;
+}
+
+.task-item:last-child {
+    border-bottom: none;
+}
+
+.task-item input[type="checkbox"] {
+    margin-right: 1rem;
+}
+
+.task-item span {
+    flex-grow: 1;
+}
+
+.task-item button {
+    background-color: #dc3545;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    padding: 0.25rem 0.5rem;
+    font-size: 0.8rem;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.task-item button:hover {
+    background-color: #c82333;
+}
+
+    </style>
+</head>
+<body>
+    <h1>Shopping List</h1>
+    <h2>Items</h2> 
+    <div id="taskList"></div>
+    <input type="text" id="taskInput" placeholder="Add a new item">
+    <button onclick="addTask()">Add Item</button>
+    <script>
+        const taskList = document.getElementById('taskList');
+        const taskInput = document.getElementById('taskInput');
+        let tasks = []; 
+        function addTask() {
+        const taskName = taskInput.value.trim();
+        if (taskName !== '') {
+            const newTask = {
+            id: Date.now(), 
+            name: taskName,
+            completed: false,
+            };
+            tasks.push(newTask);
+
+            addTaskToDOM(newTask);
+            taskInput.value = '';
+            }
+        }
+        function deleteTask() {
+        if (!confirm("Are you sure you want to delete this item?")) {
+            return;
+        }
+        const taskIdToDelete = parseInt(event.target.parentNode.dataset.taskId); // Assuming task ID is stored in a data-attribute
+        const taskIndex = tasks.findIndex(task => task.id === taskIdToDelete);
+        if (taskIndex !== -1) {
+            tasks.splice(taskIndex, 1);
+            updateTaskList();
+        } 
+        else {
+            console.error("Item not found for deletion");
+            }
+        }
+        function updateTaskList() {
+        taskList.innerHTML = '';
+        tasks.forEach(task => addTaskToDOM(task));
+        }
+        function addTaskToDOM(task) {
+        const taskItem = document.createElement('div');
+        taskItem.dataset.taskId = task.id; 
+        taskItem.innerHTML = `
+            <input type="checkbox" ${task.completed ? 'checked' : ''}>
+            <span style="text-decoration: ${task.completed ? 'line-through' : 'none'}">${task.name}</span>
+            <button onclick="deleteTask()">Delete</button>
+        `;
+        taskList.appendChild(taskItem);
+        }
+        addTask();
+    </script>
+</body>
+</html>
